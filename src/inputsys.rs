@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use std::thread;
+use std::time::Duration;
 use x11::xlib;
 use xcb::{
     x,
@@ -127,7 +128,13 @@ fn event_loop(
     event_handler: impl Fn(InputEvent) -> bool,
 ) -> xcb::Result<()> {
     loop {
-        let ev = conn.wait_for_event()?;
+        let ev = match conn.poll_for_event()? {
+            Some(e) => e,
+            None => {
+                thread::sleep(Duration::from_millis(10));
+                continue;
+            }
+        };
         let input_event: InputEvent;
 
         // TODO: Fix sending two repeated events

@@ -1,7 +1,7 @@
 [[commands]]
-action = { type = "Key", value = " " }
+action = { type = "Key", value = "space" }
 listen = { type = "Button", value = "F" }
-method = "Toggle"
+method = "Hold"
 range = { min = 14, max = 18 }
 
 [[commands]]
@@ -11,6 +11,6 @@ method = "Hold"
 range = { min = 16, max = 20 }
 
 [[commands]]
-action = { type = "Key", value = "space" }
+action = { type = "Key", value = "a" }
 listen = { type = "Key", value = "Alt_L" }
 method = "Toggle"

@@ -5,7 +5,7 @@ mod fakemouse;
 mod inputsys;
 mod settings;
 
-use clicker::{ClickerInput, ClickerState};
+use clicker::{ClickerAction, ClickerInput, ClickerState};
 use convert::{keycode_to_string, string_to_keycode};
 use env_logger;
 use inputsys::{InputButton, InputEvent, InputSystem};
@@ -107,19 +107,23 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
     loop {
         {
             let clicker_state = state.lock().unwrap();
-            for (key, cmd) in &clicker_state.commands {
-                match key {
-                    ClickerInput::Button(b) => {
-                        if cmd.is_active {
-                            println!("click");
-                            fakemouse::click(&sys, b).unwrap();
-                        }
+            for (_, cmd) in &clicker_state.commands {
+                if !cmd.is_active {
+                    continue;
+                }
+
+                // TODO: Add logic for CPS
+                match &cmd.action {
+                    ClickerAction::ButtonPress(b) | ClickerAction::ButtonClick(b, _) => {
+                        fakemouse::click(&sys, b).unwrap();
                     }
-                    ClickerInput::Key(k) => {}
+                    ClickerAction::KeyPress(s) | ClickerAction::KeyClick(s, _) => {
+                        fakekeyboard::click(&sys, string_to_keycode(s)).unwrap();
+                    }
                 }
             }
         }
-        thread::sleep(Duration::from_millis(100));
+        thread::sleep(Duration::from_millis(10));
     }
 }
 
