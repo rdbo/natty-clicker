@@ -1,3 +1,5 @@
+delay = 5 # Clicker thread delay, in milliseconds (lower delays allow for higher CPS. MaxCPS = 1000 / delay). Default: 5
+
 [[commands]]
 listen = { type = "Button", value = "F" } # The key to listen to
 action = { type = "Key", value = "space" } # The action to perform (press space)
