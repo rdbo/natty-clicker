@@ -138,7 +138,7 @@ fn event_loop(
         let input_event: InputEvent;
 
         match ev {
-            xcb::Event::Input(xinput::Event::RawButtonPress(evbtn)) => {
+            xcb::Event::Input(xinput::Event::ButtonPress(evbtn)) => {
                 let button = match InputButton::try_from(evbtn.detail() as u32) {
                     Ok(b) => b,
                     Err(_) => continue,
@@ -147,7 +147,7 @@ fn event_loop(
                 input_event = InputEvent::ButtonPress(button);
             }
 
-            xcb::Event::Input(xinput::Event::RawButtonRelease(evbtn)) => {
+            xcb::Event::Input(xinput::Event::ButtonRelease(evbtn)) => {
                 let button = match InputButton::try_from(evbtn.detail()) {
                     Ok(b) => b,
                     Err(_) => continue,
@@ -156,13 +156,13 @@ fn event_loop(
                 input_event = InputEvent::ButtonRelease(button);
             }
 
-            xcb::Event::Input(xinput::Event::RawKeyPress(evkey)) => {
+            xcb::Event::Input(xinput::Event::KeyPress(evkey)) => {
                 let key = evkey.detail() as InputKey;
 
                 input_event = InputEvent::KeyPress(key);
             }
 
-            xcb::Event::Input(xinput::Event::RawKeyRelease(evkey)) => {
+            xcb::Event::Input(xinput::Event::KeyRelease(evkey)) => {
                 let key = evkey.detail() as InputKey;
 
                 input_event = InputEvent::KeyRelease(key);
