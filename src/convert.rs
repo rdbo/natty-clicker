@@ -1,4 +1,3 @@
-use std::cell::OnceCell;
 use std::ffi::{CStr, CString};
 use std::ptr;
 use x11::xlib::{
@@ -14,7 +13,7 @@ impl DisplayMgr {
     fn new() -> Self {
         unsafe {
             Self {
-                dpy: XOpenDisplay(std::ptr::null()),
+                dpy: XOpenDisplay(ptr::null()),
             }
         }
     }

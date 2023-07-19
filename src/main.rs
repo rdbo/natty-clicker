@@ -9,7 +9,7 @@ mod time;
 use clicker::{ClickerAction, ClickerInput, ClickerState};
 use convert::{keycode_to_string, string_to_keycode};
 use env_logger;
-use inputsys::{InputButton, InputEvent, InputSystem};
+use inputsys::{InputEvent, InputSystem};
 use log::info;
 use rand::{self, Rng};
 use settings::{Method, Settings};
