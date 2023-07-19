@@ -1,8 +1,8 @@
-use crate::inputsys::{InputButton, InputSystem};
+use crate::inputsys::{InputKey, InputSystem};
 use x11::xlib;
 use xcb::{x, xtest, Connection, Xid};
 
-fn key_down(conn: &Connection, key: u32) {
+fn key_down(conn: &Connection, key: InputKey) {
     conn.send_request(&xtest::FakeInput {
         r#type: xlib::KeyPress as u8,
         detail: key as u8,
@@ -14,7 +14,7 @@ fn key_down(conn: &Connection, key: u32) {
     });
 }
 
-fn key_up(conn: &Connection, key: u32) {
+fn key_up(conn: &Connection, key: InputKey) {
     conn.send_request(&xtest::FakeInput {
         r#type: xlib::KeyRelease as u8,
         detail: key as u8,
@@ -26,18 +26,18 @@ fn key_up(conn: &Connection, key: u32) {
     });
 }
 
-pub fn press(sys: &InputSystem, key: u32) -> xcb::Result<()> {
+pub fn press(sys: &InputSystem, key: InputKey) -> xcb::Result<()> {
     key_down(&sys.conn, key);
     sys.conn.flush()?;
     Ok(())
 }
 
-pub fn release(sys: &InputSystem, key: u32) -> xcb::Result<()> {
+pub fn release(sys: &InputSystem, key: InputKey) -> xcb::Result<()> {
     key_up(&sys.conn, key);
     Ok(())
 }
 
-pub fn click(sys: &InputSystem, key: u32) -> xcb::Result<()> {
+pub fn click(sys: &InputSystem, key: InputKey) -> xcb::Result<()> {
     key_down(&sys.conn, key);
     key_up(&sys.conn, key);
     sys.conn.flush()?;

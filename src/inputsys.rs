@@ -17,7 +17,7 @@ const MOUSE_BACK: u32 = 8;
 const MOUSE_FORWARD: u32 = 9;
 
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum InputButton {
     // Normal buttons
     Left = MOUSE_LEFT,

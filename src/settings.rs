@@ -21,11 +21,10 @@ pub enum InputType {
     Button,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub enum Method {
     Hold,
     Toggle,
-    Click,
 }
 
 #[derive(Deserialize, Debug)]
