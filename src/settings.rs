@@ -21,7 +21,7 @@ pub enum InputType {
     Button,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum Method {
     Hold,
     Toggle,

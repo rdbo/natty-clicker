@@ -130,6 +130,7 @@ fn event_loop(
         let ev = conn.wait_for_event()?;
         let input_event: InputEvent;
 
+        // TODO: Fix sending two repeated events
         match ev {
             xcb::Event::Input(xinput::Event::RawButtonPress(evbtn)) => {
                 let button = match InputButton::try_from(evbtn.detail() as u32) {
