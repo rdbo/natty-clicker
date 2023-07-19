@@ -9,8 +9,9 @@ For more information, read the file `LICENSE` in the root directory of the proje
 # Features
 Natty Clicker allows you to:
 - Click using mouse and keyboard keys
-- Add custom CPS (clicks per second) ranges
+- Add random CPS (clicks per second) ranges
 - Hold or toggle between on and off
+- Emulate a key
 
 # Configuration
 The configuration of this auto-clicker is done in the `Natty.toml` file.
