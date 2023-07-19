@@ -1,7 +1,7 @@
 [[commands]]
 action = { type = "Key", value = "space" }
 listen = { type = "Button", value = "F" }
-method = "Hold"
+method = "Toggle"
 range = { min = 14, max = 18 }
 
 [[commands]]

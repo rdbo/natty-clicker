@@ -6,6 +6,8 @@ use std::ops::Range;
 #[derive(Debug)]
 pub struct ClickerCommand {
     pub is_active: bool,
+    pub last_action: i64,
+    pub next_cps: Option<u32>,
     pub action: ClickerAction,
     pub method: Method,
 }
@@ -46,10 +48,20 @@ impl ClickerState {
                 }
             };
 
+            // NOTE: The first number doesn't need to be random, since the last
+            // click was at the timestamp '0'. This means that the first click will
+            // always be instantaneous
+            let next_cps = match &cmd.range {
+                Some(r) => Some(r.min),
+                None => None,
+            };
+
             clicker_cmds.insert(
                 input,
                 ClickerCommand {
                     is_active: false,
+                    last_action: 0,
+                    next_cps,
                     action,
                     method: cmd.method.clone(),
                 },

@@ -4,17 +4,20 @@ mod fakekeyboard;
 mod fakemouse;
 mod inputsys;
 mod settings;
+mod time;
 
 use clicker::{ClickerAction, ClickerInput, ClickerState};
 use convert::{keycode_to_string, string_to_keycode};
 use env_logger;
 use inputsys::{InputButton, InputEvent, InputSystem};
 use log::info;
+use rand::{self, Rng};
 use settings::{Method, Settings};
 use std::io::Write;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
+use time::{cps_to_millis, get_timestamp};
 
 fn event_handler<'a>(
     ev: InputEvent,
@@ -104,26 +107,46 @@ fn event_handler<'a>(
 }
 
 fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
+    let mut rng = rand::thread_rng();
     loop {
         {
-            let clicker_state = state.lock().unwrap();
-            for (_, cmd) in &clicker_state.commands {
+            let now = get_timestamp();
+            let mut clicker_state = state.lock().unwrap();
+            for (_, cmd) in &mut clicker_state.commands {
                 if !cmd.is_active {
                     continue;
                 }
 
-                // TODO: Add logic for CPS
                 match &cmd.action {
-                    ClickerAction::ButtonPress(b) | ClickerAction::ButtonClick(b, _) => {
+                    ClickerAction::ButtonPress(b) => {
                         fakemouse::click(&sys, b).unwrap();
                     }
-                    ClickerAction::KeyPress(s) | ClickerAction::KeyClick(s, _) => {
-                        fakekeyboard::click(&sys, string_to_keycode(s)).unwrap();
+
+                    ClickerAction::ButtonClick(b, r) => {
+                        if now - cmd.last_action > cps_to_millis(cmd.next_cps.unwrap()) {
+                            fakemouse::click(&sys, b).unwrap();
+                            (*cmd).next_cps = Some(rng.gen_range(r.clone()));
+                            (*cmd).last_action = now;
+                        }
+                    }
+
+                    ClickerAction::KeyPress(k) => {
+                        let keycode = string_to_keycode(&k);
+                        fakekeyboard::click(&sys, keycode).unwrap();
+                    }
+
+                    ClickerAction::KeyClick(k, r) => {
+                        if now - cmd.last_action > cps_to_millis(cmd.next_cps.unwrap()) {
+                            let keycode = string_to_keycode(&k);
+                            fakekeyboard::click(&sys, keycode).unwrap();
+                            (*cmd).next_cps = Some(rng.gen_range(r.clone()));
+                            (*cmd).last_action = now;
+                        }
                     }
                 }
             }
         }
-        thread::sleep(Duration::from_millis(10));
+        thread::sleep(Duration::from_millis(5));
     }
 }
 
