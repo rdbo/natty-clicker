@@ -12,7 +12,7 @@ pub struct Command {
 #[derive(Deserialize, Debug)]
 pub struct Input {
     pub r#type: InputType,
-    pub value: char,
+    pub value: String,
 }
 
 #[derive(Deserialize, Debug)]

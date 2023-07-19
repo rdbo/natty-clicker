@@ -6,7 +6,7 @@ mod inputsys;
 mod settings;
 
 use clicker::ClickerState;
-use convert::{ascii_to_keycode, keycode_to_ascii};
+use convert::{keycode_to_string, string_to_keycode};
 use env_logger;
 use inputsys::{InputButton, InputEvent, InputSystem};
 use log::info;
@@ -31,11 +31,11 @@ fn event_handler<'a>(
         }
 
         InputEvent::KeyPress(key) => {
-            info!("Key Press: {:?}", key);
+            info!("Key Press: {:?}", keycode_to_string(key));
         }
 
         InputEvent::KeyRelease(key) => {
-            info!("Key Release: {:?}", key);
+            info!("Key Release: {:?}", keycode_to_string(key));
         }
     }
 
@@ -55,8 +55,11 @@ fn main() {
 
     info!("Initializing...");
 
-    info!("Convert A to Keycode: {}", ascii_to_keycode('A'));
-    info!("Convert keycode to char: {}", keycode_to_ascii(38));
+    info!(
+        "Convert A to Keycode: {}",
+        string_to_keycode(&"A".to_string())
+    );
+    info!("Convert keycode to char: {}", keycode_to_string(38));
 
     let settings = Settings::load().expect("[NC] Failed to load settings");
     info!("Settings: {:?}", settings);

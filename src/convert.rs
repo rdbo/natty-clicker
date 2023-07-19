@@ -1,5 +1,5 @@
 use std::cell::OnceCell;
-use std::ffi::CString;
+use std::ffi::{CStr, CString};
 use std::ptr;
 use x11::xlib::{
     Display, XCloseDisplay, XKeycodeToKeysym, XKeysymToKeycode, XKeysymToString, XOpenDisplay,
@@ -29,17 +29,23 @@ impl Drop for DisplayMgr {
 }
 
 // TODO: Take display pointer from the XCB connection
-pub fn keycode_to_ascii(keycode: u8) -> char {
+pub fn keycode_to_string(keycode: u8) -> String {
     unsafe {
         let mgr = DisplayMgr::new();
         let keysym = XKeycodeToKeysym(mgr.dpy, keycode, 0);
-        *XKeysymToString(keysym) as u8 as char
+        let keystring_ptr = XKeysymToString(keysym);
+        if keystring_ptr.is_null() {
+            return "".to_string();
+        }
+        let keystring = String::from(CStr::from_ptr(keystring_ptr).to_str().unwrap_or(""));
+        println!("keystring: {:?}", keystring);
+        keystring
     }
 }
 
-pub fn ascii_to_keycode(c: char) -> u8 {
+pub fn string_to_keycode(s: &String) -> u8 {
     unsafe {
-        let c_str = CString::new(c.to_string()).unwrap();
+        let c_str = CString::new(s.to_owned()).unwrap();
         let keysym = XStringToKeysym(c_str.as_ptr());
         let mgr = DisplayMgr::new();
         XKeysymToKeycode(mgr.dpy, keysym)
