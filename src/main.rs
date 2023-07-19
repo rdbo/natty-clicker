@@ -106,7 +106,7 @@ fn event_handler<'a>(
     return true;
 }
 
-fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
+fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>, delay_ms: u64) {
     let mut rng = rand::thread_rng();
     loop {
         {
@@ -169,7 +169,7 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
                 }
             }
         }
-        thread::sleep(Duration::from_millis(5));
+        thread::sleep(Duration::from_millis(delay_ms));
     }
 }
 
@@ -207,7 +207,7 @@ fn main() {
     let clicker_thread = {
         let sys_clone = sys.clone();
         let state_clone = state.clone();
-        thread::spawn(move || clicker_thread(sys_clone, state_clone))
+        thread::spawn(move || clicker_thread(sys_clone, state_clone, settings.delay))
     };
     info!("Started clicker thread");
 

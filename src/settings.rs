@@ -36,6 +36,7 @@ pub struct CpsRange {
 #[derive(Deserialize, Debug)]
 pub struct Settings {
     pub commands: Vec<Command>,
+    pub delay: u64,
 }
 
 impl Settings {
