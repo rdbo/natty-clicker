@@ -1,7 +1,7 @@
 use crate::inputsys::InputButton;
 use crate::settings::{InputType, Method, Settings};
 use std::collections::HashMap;
-use std::ops::Range;
+use std::ops::RangeInclusive;
 
 // TODO: Either have 'is_pressed' or 'next_cps', never both
 #[derive(Debug)]
@@ -32,7 +32,7 @@ impl ClickerState {
             let action = match cmd.action.r#type {
                 InputType::Key => {
                     if let Some(r) = &cmd.range {
-                        let range = r.min..r.max;
+                        let range = r.min..=r.max;
                         ClickerAction::KeyClick(cmd.action.value.clone(), range)
                     } else {
                         ClickerAction::KeyPress(cmd.action.value.clone())
@@ -42,7 +42,7 @@ impl ClickerState {
                 InputType::Button => {
                     let button = parse_input_button(cmd.action.value.clone())?;
                     if let Some(r) = &cmd.range {
-                        let range = r.min..r.max;
+                        let range = r.min..=r.max;
                         ClickerAction::ButtonClick(button, range)
                     } else {
                         ClickerAction::ButtonPress(button)
@@ -86,9 +86,9 @@ pub enum ClickerInput {
 #[derive(Debug)]
 pub enum ClickerAction {
     KeyPress(String),
-    KeyClick(String, Range<u32>),
+    KeyClick(String, RangeInclusive<u32>),
     ButtonPress(InputButton),
-    ButtonClick(InputButton, Range<u32>),
+    ButtonClick(InputButton, RangeInclusive<u32>),
 }
 
 fn parse_input_button(s: String) -> Option<InputButton> {
