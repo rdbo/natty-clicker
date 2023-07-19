@@ -34,6 +34,7 @@ pub fn press(sys: &InputSystem, key: InputKey) -> xcb::Result<()> {
 
 pub fn release(sys: &InputSystem, key: InputKey) -> xcb::Result<()> {
     key_up(&sys.conn, key);
+    sys.conn.flush()?;
     Ok(())
 }
 

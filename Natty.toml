@@ -11,6 +11,6 @@ method = "Hold"
 range = { min = 16, max = 20 }
 
 [[commands]]
-action = { type = "Key", value = "a" }
+action = { type = "Key", value = "space" }
 listen = { type = "Key", value = "Alt_L" }
-method = "Toggle"
+method = "Hold"

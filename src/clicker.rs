@@ -3,9 +3,11 @@ use crate::settings::{InputType, Method, Settings};
 use std::collections::HashMap;
 use std::ops::Range;
 
+// TODO: Either have 'is_pressed' or 'next_cps', never both
 #[derive(Debug)]
 pub struct ClickerCommand {
     pub is_active: bool,
+    pub is_pressed: bool,
     pub last_action: i64,
     pub next_cps: Option<u32>,
     pub action: ClickerAction,
@@ -60,6 +62,7 @@ impl ClickerState {
                 input,
                 ClickerCommand {
                     is_active: false,
+                    is_pressed: false,
                     last_action: 0,
                     next_cps,
                     action,

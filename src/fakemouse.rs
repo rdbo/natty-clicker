@@ -34,6 +34,7 @@ pub fn press(sys: &InputSystem, btn: &InputButton) -> xcb::Result<()> {
 
 pub fn release(sys: &InputSystem, btn: &InputButton) -> xcb::Result<()> {
     button_up(&sys.conn, btn);
+    sys.conn.flush()?;
     Ok(())
 }
 

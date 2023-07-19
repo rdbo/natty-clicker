@@ -114,12 +114,34 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
             let mut clicker_state = state.lock().unwrap();
             for (_, cmd) in &mut clicker_state.commands {
                 if !cmd.is_active {
+                    if cmd.is_pressed {
+                        (*cmd).is_pressed = false;
+                        match &cmd.action {
+                            ClickerAction::ButtonPress(b) => {
+                                fakemouse::release(&sys, b).unwrap();
+                            }
+
+                            ClickerAction::KeyPress(k) => {
+                                let keycode = string_to_keycode(k);
+                                fakekeyboard::release(&sys, keycode).unwrap();
+                            }
+
+                            _ => {
+                                panic!("[NC] This block should never hit");
+                            }
+                        }
+                    }
+                    continue;
+                }
+
+                if cmd.is_pressed {
                     continue;
                 }
 
                 match &cmd.action {
                     ClickerAction::ButtonPress(b) => {
-                        fakemouse::click(&sys, b).unwrap();
+                        fakemouse::press(&sys, b).unwrap();
+                        (*cmd).is_pressed = true;
                     }
 
                     ClickerAction::ButtonClick(b, r) => {
@@ -132,7 +154,8 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
 
                     ClickerAction::KeyPress(k) => {
                         let keycode = string_to_keycode(&k);
-                        fakekeyboard::click(&sys, keycode).unwrap();
+                        fakekeyboard::press(&sys, keycode).unwrap();
+                        (*cmd).is_pressed = true;
                     }
 
                     ClickerAction::KeyClick(k, r) => {
