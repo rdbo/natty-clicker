@@ -1,16 +1,18 @@
 [[commands]]
-action = { type = "Key", value = "space" }
-listen = { type = "Button", value = "F" }
-method = "Toggle"
-range = { min = 14, max = 18 }
+listen = { type = "Button", value = "F" } # The key to listen to
+action = { type = "Key", value = "space" } # The action to perform (press space)
+method = "Toggle" # The listen method. Toggle will alternate between on and off, hold will only click when the key is held
+range = { min = 14, max = 18 } # The CPS (clicks per second) range. In this case 14CPS to 18CPS
 
 [[commands]]
-action = { type = "Button", value = "L" }
 listen = { type = "Button", value = "B" }
+action = { type = "Button", value = "L" }
 method = "Hold"
-range = { min = 16, max = 20 }
+range = { min = 12, max = 18 }
 
 [[commands]]
-action = { type = "Key", value = "space" }
 listen = { type = "Key", value = "Alt_L" }
+action = { type = "Key", value = "space" }
 method = "Hold"
+# No range means simulate the key. When Alt_L is pressed, space is pressed.
+# When Alt_L is released, space is released.
