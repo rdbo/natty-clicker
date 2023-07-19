@@ -1,9 +1,13 @@
+mod clicker;
+mod fakekeyboard;
 mod fakemouse;
 mod inputsys;
+mod settings;
 
 use env_logger;
 use inputsys::{InputButton, InputEvent, InputSystem};
 use log::info;
+use settings::Settings;
 use std::io::Write;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -58,8 +62,8 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
             };
 
             if clicker_state.is_pressed {
-                info!("should click");
-                fakemouse::click(&sys, InputButton::Left).ok();
+                // fakemouse::click(&sys, InputButton::Left).ok();
+                fakekeyboard::click(&sys, 38);
             }
         }
 
@@ -71,7 +75,11 @@ fn main() {
     env_logger::builder()
         .format(|buf, record| writeln!(buf, "[NC] {}: {}", record.level(), record.args()))
         .init();
+
     info!("Initializing...");
+
+    let settings = Settings::load().expect("[NC] Failed to load settings");
+    info!("Settings: {:?}", settings);
 
     let sys = Arc::new(InputSystem::try_init().expect("[NC] Failed to initialize input system"));
     info!("Successfully initialized");

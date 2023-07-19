@@ -1,0 +1,11 @@
+[[commands]]
+action = { type = "Key", value = " " }
+listen = { type = "Button", value = "L" }
+method = "Toggle"
+range = { min = 14, max = 18 }
+
+[[commands]]
+action = { type = "Button", value = "L" }
+listen = { type = "Button", value = "B" }
+method = "Hold"
+range = { min = 16, max = 20 }
