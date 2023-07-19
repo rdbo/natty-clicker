@@ -19,7 +19,7 @@ impl ClickerState {
         let mut clicker_cmds = HashMap::new();
         for cmd in &settings.commands {
             let input = match cmd.listen.r#type {
-                InputType::Key => ClickerInput::Key(cmd.listen.value),
+                InputType::Key => ClickerInput::Key(cmd.listen.value.to_ascii_lowercase()),
                 InputType::Button => ClickerInput::Button(parse_input_button(cmd.listen.value)?),
             };
 
@@ -27,9 +27,9 @@ impl ClickerState {
                 InputType::Key => {
                     if let Some(r) = &cmd.range {
                         let range = r.min..r.max;
-                        ClickerAction::KeyClick(cmd.action.value, range)
+                        ClickerAction::KeyClick(cmd.action.value.to_ascii_lowercase(), range)
                     } else {
-                        ClickerAction::KeyPress(cmd.action.value)
+                        ClickerAction::KeyPress(cmd.action.value.to_ascii_lowercase())
                     }
                 }
 
@@ -75,7 +75,7 @@ pub enum ClickerAction {
 }
 
 fn parse_input_button(c: char) -> Option<InputButton> {
-    match c {
+    match c.to_ascii_uppercase() {
         'L' => Some(InputButton::Left),
         'M' => Some(InputButton::Middle),
         'R' => Some(InputButton::Right),

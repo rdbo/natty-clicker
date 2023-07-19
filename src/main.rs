@@ -1,10 +1,12 @@
 mod clicker;
+mod convert;
 mod fakekeyboard;
 mod fakemouse;
 mod inputsys;
 mod settings;
 
 use clicker::ClickerState;
+use convert::{ascii_to_keycode, keycode_to_ascii};
 use env_logger;
 use inputsys::{InputButton, InputEvent, InputSystem};
 use log::info;
@@ -52,6 +54,9 @@ fn main() {
         .init();
 
     info!("Initializing...");
+
+    info!("Convert A to Keycode: {}", ascii_to_keycode('A'));
+    info!("Convert keycode to char: {}", keycode_to_ascii(38));
 
     let settings = Settings::load().expect("[NC] Failed to load settings");
     info!("Settings: {:?}", settings);
