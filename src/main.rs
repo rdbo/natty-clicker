@@ -1,7 +1,10 @@
 mod fakemouse;
 mod inputsys;
 
+use env_logger;
 use inputsys::{InputButton, InputEvent, InputSystem};
+use log::info;
+use std::io::Write;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -18,7 +21,7 @@ fn event_handler<'a>(
 ) -> bool {
     match ev {
         InputEvent::ButtonPress(btn) => {
-            println!("[OC] Button Press: {:?}", btn);
+            info!("Button Press: {:?}", btn);
             if btn == InputButton::Back {
                 let mut clicker_state = state.lock().unwrap();
                 clicker_state.is_pressed = true;
@@ -26,7 +29,7 @@ fn event_handler<'a>(
         }
 
         InputEvent::ButtonRelease(btn) => {
-            println!("[OC] Button Release: {:?}", btn);
+            info!("Button Release: {:?}", btn);
             if btn == InputButton::Back {
                 let mut clicker_state = state.lock().unwrap();
                 clicker_state.is_pressed = false;
@@ -34,11 +37,11 @@ fn event_handler<'a>(
         }
 
         InputEvent::KeyPress(key) => {
-            println!("[OC] Key Press: {:?}", key);
+            info!("Key Press: {:?}", key);
         }
 
         InputEvent::KeyRelease(key) => {
-            println!("[OC] Key Release: {:?}", key);
+            info!("Key Release: {:?}", key);
         }
     }
 
@@ -55,7 +58,7 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
             };
 
             if clicker_state.is_pressed {
-                println!("should click");
+                info!("should click");
                 fakemouse::click(&sys, InputButton::Left).ok();
             }
         }
@@ -65,10 +68,13 @@ fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
 }
 
 fn main() {
-    println!("[OC] Initializing...");
+    env_logger::builder()
+        .format(|buf, record| writeln!(buf, "[NC] {}: {}", record.level(), record.args()))
+        .init();
+    info!("Initializing...");
 
-    let sys = Arc::new(InputSystem::try_init().expect("[OC] Failed to initialize input system"));
-    println!("[OC] Successfully initialized");
+    let sys = Arc::new(InputSystem::try_init().expect("[NC] Failed to initialize input system"));
+    info!("Successfully initialized");
 
     let state = Arc::new(Mutex::new(ClickerState { is_pressed: false }));
 
@@ -77,14 +83,14 @@ fn main() {
         let state_clone = state.clone();
         thread::spawn(move || clicker_thread(sys_clone, state_clone))
     };
-    println!("[OC] Started clicker thread");
+    info!("Started clicker thread");
 
     let event_thread = {
         let sys_clone = sys.clone();
         let state_clone = state.clone();
         sys.spawn_event_loop(move |ev| event_handler(ev, sys_clone.clone(), state_clone.clone()))
     };
-    println!("[OC] Started event loop");
+    info!("Started event loop");
 
     event_thread.join().ok();
     clicker_thread.join().ok();

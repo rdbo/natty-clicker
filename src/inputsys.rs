@@ -132,12 +132,10 @@ fn event_loop(
 
         match ev {
             xcb::Event::Input(xinput::Event::RawButtonPress(evbtn)) => {
-                println!("detail: {}", evbtn.detail());
                 let button = match InputButton::try_from(evbtn.detail() as u32) {
                     Ok(b) => b,
                     Err(_) => continue,
                 };
-                println!("button: {}", button as u32);
 
                 input_event = InputEvent::ButtonPress(button);
             }
