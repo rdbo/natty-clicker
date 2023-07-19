@@ -38,7 +38,6 @@ pub fn keycode_to_string(keycode: u8) -> String {
             return "".to_string();
         }
         let keystring = String::from(CStr::from_ptr(keystring_ptr).to_str().unwrap_or(""));
-        println!("keystring: {:?}", keystring);
         keystring
     }
 }

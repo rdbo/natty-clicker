@@ -105,6 +105,20 @@ fn event_handler<'a>(
 
 fn clicker_thread(sys: Arc<InputSystem>, state: Arc<Mutex<ClickerState>>) {
     loop {
+        {
+            let clicker_state = state.lock().unwrap();
+            for (key, cmd) in &clicker_state.commands {
+                match key {
+                    ClickerInput::Button(b) => {
+                        if cmd.is_active {
+                            println!("click");
+                            fakemouse::click(&sys, b).unwrap();
+                        }
+                    }
+                    ClickerInput::Key(k) => {}
+                }
+            }
+        }
         thread::sleep(Duration::from_millis(100));
     }
 }
