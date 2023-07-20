@@ -16,5 +16,5 @@ range = { min = 12, max = 18 }
 listen = { type = "Key", value = "Alt_L" }
 action = { type = "Key", value = "space" }
 method = "Hold"
-# No range means simulate the key. When Alt_L is pressed, space is pressed.
+# No range means emulate the key. When Alt_L is pressed, space is pressed.
 # When Alt_L is released, space is released.
