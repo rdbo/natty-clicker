@@ -13,7 +13,7 @@ const MOUSE_MIDDLE: u32 = xlib::Button2;
 const MOUSE_RIGHT: u32 = xlib::Button3;
 const MOUSE_SCROLL_UP: u32 = xlib::Button4;
 const MOUSE_SCROLL_DOWN: u32 = xlib::Button5;
-// TODO: Found library definitions of these values
+// TODO: Find library definitions of these values
 const MOUSE_BACK: u32 = 8;
 const MOUSE_FORWARD: u32 = 9;
 
