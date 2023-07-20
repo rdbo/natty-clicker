@@ -87,8 +87,8 @@ fn setup_xcb_events(conn: &Connection, window: x::Window) -> xcb::Result<()> {
     let device = xinput::Device::All;
     let evmask = xinput::EventMaskBuf::new(
         device,
-        &[XiEventMask::BUTTON_PRESS
-            | XiEventMask::BUTTON_RELEASE
+        &[XiEventMask::RAW_BUTTON_PRESS
+            | XiEventMask::RAW_BUTTON_RELEASE
             | XiEventMask::KEY_PRESS
             | XiEventMask::KEY_RELEASE],
     );
@@ -137,8 +137,9 @@ fn event_loop(
         };
         let input_event: InputEvent;
 
+        // TODO: Fix doubled button events
         match ev {
-            xcb::Event::Input(xinput::Event::ButtonPress(evbtn)) => {
+            xcb::Event::Input(xinput::Event::RawButtonPress(evbtn)) => {
                 let button = match InputButton::try_from(evbtn.detail() as u32) {
                     Ok(b) => b,
                     Err(_) => continue,
@@ -147,7 +148,7 @@ fn event_loop(
                 input_event = InputEvent::ButtonPress(button);
             }
 
-            xcb::Event::Input(xinput::Event::ButtonRelease(evbtn)) => {
+            xcb::Event::Input(xinput::Event::RawButtonRelease(evbtn)) => {
                 let button = match InputButton::try_from(evbtn.detail()) {
                     Ok(b) => b,
                     Err(_) => continue,
